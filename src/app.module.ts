@@ -4,6 +4,7 @@ import { ChatModule } from './chat/chat.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { RedisModule } from './redis/redis.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -11,6 +12,7 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     ChatModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

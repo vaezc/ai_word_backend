@@ -1,0 +1,17 @@
+services:
+  ai-word-service:
+    image: g-zxyw0558-docker.pkg.coding.net/ai/docker/ai_word:0.2
+    depends_on:
+      - redis
+    ports:
+      - 3003:3003
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    command: ['redis-server', '--requirepass', 'vae94']
+    volumes:
+      - redis-data:/var/lib/redis/data
+
+volumes:
+  redis-data:

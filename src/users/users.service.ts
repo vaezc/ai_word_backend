@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable } from '@nestjs/common';
+import { RedisService } from 'src/redis/redis.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-
 @Injectable()
 export class UsersService {
+  constructor(private readonly redisService: RedisService) {}
+
+  async updateCount(id: string) {
+    const count = Number(await this.redisService.get('users+' + id));
+
+    if (count) {
+      this.redisService.set('users+' + id, count + 1);
+    } else {
+      this.redisService.set('users+' + id, 1);
+    }
+    return {
+      count: count,
+    };
+  }
+
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    this.redisService.set('users+' + createUserDto.id, 0);
+    return createUserDto;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findOne(id: string) {
+    return this.redisService.get('users+' + id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const count = await this.redisService.get('users+' + id);
+    if (count) {
+      this.redisService.set('users+' + id, count + 1);
+    } else {
+      this.redisService.set('users+' + id, 1);
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return updateUserDto;
   }
 
   remove(id: number) {
+    this.redisService.del('users+ ' + id);
     return `This action removes a #${id} user`;
   }
 }
