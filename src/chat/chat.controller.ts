@@ -1,14 +1,19 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Headers } from '@nestjs/common';
 
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { ConfigService } from '@nestjs/config';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableLambda } from '@langchain/core/runnables';
-
+import { UserService } from '../user/user.service';
+import { ChatService } from './chat.service';
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+    private readonly chatService: ChatService,
+  ) {}
 
   @Get()
   async getChat(
@@ -16,7 +21,23 @@ export class ChatController {
     @Query('scene') scene: string,
     @Query('tips') tips: string,
     @Query('interest') interest: string,
+    @Headers('wxcode') wxcode: string,
   ) {
+    if (!wxcode) {
+      return {
+        code: 401,
+        message: '请先登录',
+      };
+    }
+
+    const result = await this.userService.reduceSendCount(wxcode);
+    if (!result) {
+      return {
+        code: 402,
+        message: '您已达到今日发送次数上限',
+      };
+    }
+
     const llm = new ChatOpenAI({
       apiKey: this.configService.get('OPENAI_API_KEY'),
       configuration: {
@@ -62,7 +83,9 @@ export class ChatController {
       tips,
       interest,
     });
+
     if (checkResult === 'true') {
+      await this.chatService.addMessage(wxcode, content);
       return content;
     } else {
       return '不符合要求, 请重新生成';

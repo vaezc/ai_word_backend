@@ -1,17 +1,20 @@
 services:
   ai-word-service:
-    image: g-zxyw0558-docker.pkg.coding.net/ai/docker/ai_word:0.2
+    image: g-zxyw0558-docker.pkg.coding.net/ai/docker/ai_word:0.5
     depends_on:
-      - redis
+      - postgres
     ports:
       - 3003:3003
-  redis:
-    image: redis:latest
+  postgres:
+    image: postgres:15
     ports:
-      - 6379:6379
-    command: ['redis-server', '--requirepass', 'vae94']
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=vae
+      - POSTGRES_PASSWORD=vae94
+      - POSTGRES_DB=ai_word
     volumes:
-      - redis-data:/var/lib/redis/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  redis-data:
+  postgres_data:

@@ -16,8 +16,10 @@ COPY . .
 # Build the NestJS application
 RUN pnpm run build
 
+RUN npx prisma generate
+
 # Expose the application port
 EXPOSE 3003
 
 # Command to run the application
-CMD ["node", "dist/main"]
+CMD [ "pnpm", "run", "start:migrate:prod" ]

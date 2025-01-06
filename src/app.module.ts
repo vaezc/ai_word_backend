@@ -3,16 +3,16 @@ import { AppService } from './app.service';
 import { ChatModule } from './chat/chat.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { RedisModule } from './redis/redis.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UsersModule,
+    PrismaModule,
     ChatModule,
-    RedisModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
