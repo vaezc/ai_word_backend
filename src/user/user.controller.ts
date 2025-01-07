@@ -13,9 +13,9 @@ export class UserController {
 
     const user = await this.userService.getUser(body.id);
     if (user) {
-      await this.userService.updateLastLogin(body.id);
+      return await this.userService.updateLastLogin(body.id);
     } else {
-      return this.userService.createUser(body.id);
+      return await this.userService.createUser(body.id);
     }
   }
 }

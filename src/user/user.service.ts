@@ -16,8 +16,8 @@ export class UserService {
     });
   }
 
-  async getUser(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+  async getUser(wxId: string) {
+    return this.prisma.user.findUnique({ where: { wxId } });
   }
 
   // 减少发送次数
@@ -25,11 +25,6 @@ export class UserService {
     const user = await this.prisma.user.findUnique({ where: { wxId } });
     if (!user) {
       throw new NotFoundException('User not found');
-    }
-
-    // 如果最后登录时间是昨天 则重置发送次数
-    if (!isSameDay(user.lastLogin, new Date())) {
-      await this.updateSendCount(wxId);
     }
 
     if (user.limit <= 0) {
@@ -52,6 +47,13 @@ export class UserService {
 
   //更新最后登录时间
   async updateLastLogin(wxId: string) {
+    const user = await this.prisma.user.findUnique({ where: { wxId } });
+    // 如果最后登录时间是昨天 则重置发送次数
+
+    if (!isSameDay(user.lastLogin, new Date())) {
+      await this.updateSendCount(wxId);
+    }
+
     return this.prisma.user.update({
       where: { wxId },
       data: { lastLogin: new Date() },

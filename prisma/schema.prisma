@@ -14,10 +14,10 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  // id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  wxId      String   @unique
+  wxId      String   @id @unique
   lastLogin DateTime
   limit     Int      @default(10)
   wordHistory  WordHistory[] 
