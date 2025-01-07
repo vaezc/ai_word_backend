@@ -7,11 +7,12 @@ import { isSameDay } from 'date-fns';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(id: string) {
+  async createUser(id: string, sessionKey: string) {
     return this.prisma.user.create({
       data: {
         wxId: id,
         lastLogin: new Date(),
+        sessionKey,
       },
     });
   }
@@ -46,7 +47,7 @@ export class UserService {
   }
 
   //更新最后登录时间
-  async updateLastLogin(wxId: string) {
+  async updateLastLogin(wxId: string, sessionKey: string) {
     const user = await this.prisma.user.findUnique({ where: { wxId } });
     // 如果最后登录时间是昨天 则重置发送次数
 
@@ -56,7 +57,7 @@ export class UserService {
 
     return this.prisma.user.update({
       where: { wxId },
-      data: { lastLogin: new Date() },
+      data: { lastLogin: new Date(), sessionKey },
     });
   }
 }

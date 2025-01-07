@@ -18,6 +18,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   wxId      String   @id @unique
+  sessionKey String  @default("")
   lastLogin DateTime
   limit     Int      @default(10)
   wordHistory  WordHistory[] 
