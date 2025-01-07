@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Headers } from '@nestjs/common';
+import { Controller, Get, Query, Headers, Req } from '@nestjs/common';
 
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
@@ -21,14 +21,16 @@ export class ChatController {
     @Query('scene') scene: string,
     @Query('tips') tips: string,
     @Query('interest') interest: string,
+    @Req() req: Request,
   ) {
-    // const result = await this.userService.reduceSendCount(wxcode);
-    // if (!result) {
-    //   return {
-    //     code: 402,
-    //     message: '您已达到今日发送次数上限',
-    //   };
-    // }
+    const user = req['user'];
+    const result = await this.userService.reduceSendCount(user.wxId);
+    if (!result) {
+      return {
+        code: 402,
+        message: '您已达到今日发送次数上限',
+      };
+    }
 
     const llm = new ChatOpenAI({
       apiKey: this.configService.get('OPENAI_API_KEY'),
@@ -61,7 +63,7 @@ export class ChatController {
       }) => {
         const result = await chain.invoke(input);
         content = result;
-        console.log(result);
+        console.log('user id : \n', user.wxId, ' \ncontent : \n', content);
         return { value: result };
       },
     })
@@ -77,7 +79,7 @@ export class ChatController {
     });
 
     if (checkResult === 'true') {
-      // await this.chatService.addMessage(wxcode, content);
+      await this.chatService.addMessage(user.wxId, content);
       return content;
     } else {
       return '不符合要求, 请重新生成';

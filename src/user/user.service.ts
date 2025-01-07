@@ -40,6 +40,7 @@ export class UserService {
 
   // 更新发送次数
   async updateSendCount(wxId: string) {
+    await this.updateLastLogin(wxId);
     return this.prisma.user.update({
       where: { wxId },
       data: { limit: { increment: 10 } },
@@ -47,7 +48,7 @@ export class UserService {
   }
 
   //更新最后登录时间
-  async updateLastLogin(wxId: string, sessionKey: string) {
+  async updateLastLogin(wxId: string) {
     const user = await this.prisma.user.findUnique({ where: { wxId } });
     // 如果最后登录时间是昨天 则重置发送次数
 
@@ -57,7 +58,7 @@ export class UserService {
 
     return this.prisma.user.update({
       where: { wxId },
-      data: { lastLogin: new Date(), sessionKey },
+      data: { lastLogin: new Date() },
     });
   }
 }
