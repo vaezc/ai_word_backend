@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Headers, Req } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
@@ -7,6 +7,7 @@ import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableLambda } from '@langchain/core/runnables';
 import { UserService } from '../user/user.service';
 import { ChatService } from './chat.service';
+
 @Controller('chat')
 export class ChatController {
   constructor(
