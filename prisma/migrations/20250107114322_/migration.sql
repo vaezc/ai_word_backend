@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "WordHistory" ADD COLUMN     "interest" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "scene" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "tips" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "topic" TEXT NOT NULL DEFAULT '';

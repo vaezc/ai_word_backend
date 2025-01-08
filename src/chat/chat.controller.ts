@@ -80,7 +80,14 @@ export class ChatController {
     });
 
     if (checkResult === 'true') {
-      await this.chatService.addMessage(user.wxId, content);
+      await this.chatService.addMessage(
+        user.wxId,
+        content,
+        scene,
+        topic,
+        tips,
+        interest,
+      );
       return content;
     } else {
       return '不符合要求, 请重新生成';

@@ -31,4 +31,8 @@ model WordHistory {
   createdAt DateTime @default(now())
   word      String
   user      User     @relation(fields: [userId], references: [wxId])
+  scene     String   @default("")
+  topic     String   @default("")
+  tips      String   @default("")
+  interest  String   @default("")
 }
