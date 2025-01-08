@@ -14,9 +14,9 @@ RUN npm install -g pnpm && pnpm i
 COPY . .
 
 # Build the NestJS application
-RUN pnpm run build
+RUN pnpm run build && pnpm run prisma:generate:prod
 
-RUN npx prisma generate
+
 
 # Expose the application port
 EXPOSE 3003

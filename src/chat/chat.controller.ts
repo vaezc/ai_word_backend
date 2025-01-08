@@ -20,8 +20,8 @@ export class ChatController {
   async getChat(
     @Query('topic') topic: string,
     @Query('scene') scene: string,
-    @Query('tips') tips: string,
-    @Query('interest') interest: string,
+    @Query('tips') tips: string = '',
+    @Query('interest') interest: string = '',
     @Query('wordCount') wordCount: number = 100,
     @Req() req: Request,
   ) {
