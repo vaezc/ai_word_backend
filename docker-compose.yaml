@@ -1,6 +1,6 @@
 services:
   ai-word-service:
-    image: g-zxyw0558-docker.pkg.coding.net/ai/docker/ai_word:0.5
+    image: g-zxyw0558-docker.pkg.coding.net/ai/docker/ai_word:0.13
     depends_on:
       - postgres
     ports:

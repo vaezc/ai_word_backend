@@ -22,6 +22,7 @@ export class ChatController {
     @Query('scene') scene: string,
     @Query('tips') tips: string,
     @Query('interest') interest: string,
+    @Query('wordCount') wordCount: number = 100,
     @Req() req: Request,
   ) {
     const user = req['user'];
@@ -44,7 +45,7 @@ export class ChatController {
     });
 
     const prompt = ChatPromptTemplate.fromTemplate(
-      '请用一些喜庆吉祥的祝福词给 {topic}, 祝福词要大气，喜庆，大概100字左右, 需要具有创意和新意， 场合是 {scene}, 要结合场合，不要出现任何不合适的内容。 希望结合这些关键词 {tips} 来生成, 返回的话要贴近现实，不要出现太多书面词汇。 请结合 {interest} 来生成',
+      '请用一些喜庆吉祥的祝福词给 {topic}, 祝福词要大气，喜庆，大概{wordCount}字左右, 需要具有创意和新意， 场合是 {scene}, 要结合场合，不要出现任何不合适的内容。 希望结合这些关键词 {tips} 来生成, 返回的话要贴近现实，不要出现太多书面词汇。 请结合 {interest} 来生成',
     );
 
     const chain = prompt.pipe(llm).pipe(new StringOutputParser());
@@ -61,6 +62,7 @@ export class ChatController {
         scene: string;
         tips: string;
         interest: string;
+        wordCount: number;
       }) => {
         const result = await chain.invoke(input);
         content = result;
@@ -77,6 +79,7 @@ export class ChatController {
       scene,
       tips,
       interest,
+      wordCount,
     });
 
     if (checkResult === 'true') {
