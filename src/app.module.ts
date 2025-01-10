@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MessageModule } from './message/message.module';
 
 console.log(process.env.NODE_ENV);
 @Module({
@@ -18,6 +19,7 @@ console.log(process.env.NODE_ENV);
     ChatModule,
     UserModule,
     AuthModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

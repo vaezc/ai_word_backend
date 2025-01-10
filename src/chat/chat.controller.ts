@@ -83,7 +83,7 @@ export class ChatController {
     });
 
     if (checkResult === 'true') {
-      await this.chatService.addMessage(
+      const message = await this.chatService.addMessage(
         user.wxId,
         content,
         scene,
@@ -91,9 +91,19 @@ export class ChatController {
         tips,
         interest,
       );
-      return content;
+      return {
+        code: 200,
+        message: '生成成功',
+        data: {
+          content,
+          id: message.id,
+        },
+      };
     } else {
-      return '不符合要求, 请重新生成';
+      return {
+        code: 400,
+        message: '不符合要求, 请重新生成',
+      };
     }
   }
 }
